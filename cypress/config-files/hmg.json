@@ -1,0 +1,12 @@
+{
+    "env": {
+        "MockRequest": false,
+        "exemplo": "https://barrigarest.wcaquino.me",
+        "users": {
+            "user_exemplo": {
+                "email": "caio@caio",
+                "password": "123"
+            }
+        }
+    }
+}
