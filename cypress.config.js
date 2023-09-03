@@ -5,7 +5,7 @@ module.exports = defineConfig({
   viewportHeight: 720,
   defaultCommandTimeout: 50000,
   pageLoadTimeout: 50000,
-  global_timeout: 30000,
+  global_timeout: 20000,
   numTestsKeptInMemory: 500,
   screenshotsFolder: 'cypress/reports/screenshots',
   'cucumberautocomplete.strictGherkinCompletion': true,

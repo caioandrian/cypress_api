@@ -1,6 +1,7 @@
 {
     "env": {
         "MockRequest": false,
+        "global_timeout": 20000,
         "exemplo": "https://barrigarest.wcaquino.me",
         "users": {
             "user_exemplo": {
