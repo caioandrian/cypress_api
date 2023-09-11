@@ -4,13 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "cy:open-hmg": "cypress open --env fileConfig=hmg",
+    "cy:open": "cypress open",
     "cy:open-pre": "cypress open --env fileConfig=pre",
 
-    "cy:run": "cypress run --env fileConfig=hmg",
-    "cy:run-exemplo": "cypress run --spec 'cypress/e2e/spec/exemplo/' --env fileConfig=hmg",
+    "cy:run": "cypress run --browser chrome",
+    "cy:run-exemplo": "cypress run --spec 'cypress/e2e/spec/exemplo/' --browser chrome",
 
-    "cy:chrome": "cypress run --env fileConfig=dev --browser chrome --env fileConfig=hmg",
     "cypress:verify": "cypress verify",
     "update-packages": "npx npm-check-updates"
   },

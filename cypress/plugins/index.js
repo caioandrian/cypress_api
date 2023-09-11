@@ -20,7 +20,12 @@ module.exports = (on, config) => {
   on('file:preprocessor', cucumber())
   on('before:browser:launch', (browser = {}, launchOptions) => {
     if (browser.family === 'chromium' && browser.name !== 'electron') {
+      //launchOptions.args.push("--incognito");
       launchOptions.args.push('--disable-dev-shm-usage')
+    }
+
+    if (browser.name == 'chrome') {
+      launchOptions.args.push('--disable-gpu')
     }
  
     return launchOptions
@@ -31,7 +36,12 @@ module.exports = (on, config) => {
     await exec("node ./cypress/support/clear.js")
   });
 
-  on('after:run', async () => {  
+  on('after:run', async (results) => {  
+    if (results) {
+      await fs.mkdirSync("cypress/run", { recursive: true });
+      await fs.writeFile("cypress/run/results.json", JSON.stringify(results));
+    }
+
     await exec("node ./cypress/support/reporter.js")
     await exec("npx jrm ./cypress/reports/junitreport.xml ./cypress/reports/junit/*.xml");
     await afterRunHook();
