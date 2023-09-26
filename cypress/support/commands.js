@@ -47,7 +47,7 @@ import Ajv from 'ajv'
 const ajv = new Ajv({allErrors: true, verbose: true, strict: false, useDefaults: true});
 
 Cypress.Commands.add('validacao_de_contrato', (resposta, schema, status) => {
-    cy.fixture(`schema/${schema}/${status}.json`).then( schema => {
+    cy.fixture(`${schema}/${status}.json`).then( schema => {
         //schema que será usado para validação
         const validate = ajv.compile(schema)
         console.log(validate)
