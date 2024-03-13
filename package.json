@@ -6,10 +6,9 @@
   "scripts": {
     "cy:open": "cypress open",
     "cy:open-pre": "cypress open --env fileConfig=pre",
-
     "cy:run": "cypress run --browser chrome",
     "cy:run-exemplo": "cypress run --spec 'cypress/e2e/spec/exemplo/' --browser chrome",
-
+    "cy:run-exemplo-regressao":"cypress run --spec 'cypress/e2e/spec/exemplo/' --browser chrome --env grep=regressão",
     "cypress:verify": "cypress verify",
     "update-packages": "npx npm-check-updates"
   },
@@ -34,6 +33,7 @@
     "rimraf": "^5.0.1"
   },
   "dependencies": {
+    "@cypress/grep": "^4.0.1",
     "cypress-mochawesome-reporter": "^3.5.1",
     "cypress-multi-reporters": "^1.6.3",
     "cypress-plugin-api": "^2.11.1",

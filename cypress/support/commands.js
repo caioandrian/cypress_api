@@ -44,7 +44,7 @@ Cypress.Commands.add('step_not_implemented', () => {
 import Ajv from 'ajv'
 
 //strict true dando erro...
-const ajv = new Ajv({allErrors: true, verbose: true, strict: false, useDefaults: true});
+const ajv = new Ajv();
 
 Cypress.Commands.add('validacao_de_contrato', (resposta, schema, status) => {
     cy.fixture(`${schema}/${status}.json`).then( schema => {

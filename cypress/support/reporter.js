@@ -40,7 +40,7 @@ fs.readFile('cypress/run/results.json', function read(err, data) {
         customData: {
             title: 'Run info',
             data: [
-                {label: 'Project', value: 'Backend'},
+                {label: 'Project', value: 'Backend - Exemplo'},
                 {label: 'Date Start', value: new Date(runInfos.startedTestsAt).toLocaleString()},
                 {label: 'Date End', value: new Date(runInfos.endedTestsAt).toLocaleString()}
             ]

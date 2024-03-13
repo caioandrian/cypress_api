@@ -2,12 +2,17 @@
     "env": {
         "MockRequest": false,
         "global_timeout": 20000,
-        "exemplo": "https://barrigarest.wcaquino.me",
         "users": {
-            "user_exemplo": {
+            "exemplo": {
                 "email": "caio@caio",
                 "password": "123"
             }
+        },
+        "exemplo": {
+            "wcaquino": "https://barrigarest.wcaquino.me"
+        },
+        "keys": {
+
         }
     }
 }
