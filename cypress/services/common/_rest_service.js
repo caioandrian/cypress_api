@@ -198,13 +198,13 @@ export default class Rest{
         return cy.wrap(header)
     }
 
-    static get_query(propriedade, valor){
+    static criar_json(propriedade, valor){
         let obj = {}
         obj[propriedade] = valor
         return cy.wrap(obj)
     }
 
-    static obter_resposta(verbo = "GET", ms, ambiente, endpoint, body = {}){
+    static request(verbo = "GET", ms, ambiente, endpoint, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -212,7 +212,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, this.header())
     }
 
-    static obter_resposta_por_id(verbo = "GET", ms, ambiente, endpoint, id, body = {}){
+    static request_por_id(verbo = "GET", ms, ambiente, endpoint, id, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -220,7 +220,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, this.header())
     }
 
-    static obter_resposta_por_query(verbo = "GET", ms, ambiente, endpoint, query, body = {}){
+    static request_por_query(verbo = "GET", ms, ambiente, endpoint, query, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -228,7 +228,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, this.header(), query)
     }
 
-    static obter_resposta_por_id_e_query(verbo = "GET", ms, ambiente, endpoint, id, query, body = {}){
+    static request_por_id_e_query(verbo = "GET", ms, ambiente, endpoint, id, query, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -236,7 +236,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, this.header(), query)
     }
 
-    static obter_resposta_por_id_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, id, header_modificado, body = {}){
+    static request_por_id_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, id, header_modificado, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -244,7 +244,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, header_modificado)
     }
 
-    static obter_resposta_com_header_modificado(verbo = "GET", ms, ambiente, endpoint, header_modificado, body = {}){
+    static request_com_header_modificado(verbo = "GET", ms, ambiente, endpoint, header_modificado, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -252,7 +252,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, header_modificado)
     }
 
-    static obter_resposta_por_2_ids(verbo = "GET", ms, ambiente, endpoint, id, endpoint2, id2, body = {}){
+    static request_por_2_ids(verbo = "GET", ms, ambiente, endpoint, id, endpoint2, id2, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -260,7 +260,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, this.header())
     }
 
-    static obter_resposta_por_id_e_por_query_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, id, query, header_modificado, body = {}){
+    static request_por_id_e_por_query_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, id, query, header_modificado, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms) 
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -268,7 +268,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, header_modificado, query)
     }
 
-    static obter_resposta_por_query_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, query, header_modificado, body = {}){
+    static request_por_query_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, query, header_modificado, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -276,7 +276,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, header_modificado, query)
     }
 
-    static obter_resposta_por_id_e_body_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, id, header_modificado, body = {}){
+    static request_por_id_e_body_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, id, header_modificado, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -284,7 +284,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, header_modificado)
     }
 
-    static obter_resposta_header_modificado(verbo = "GET", ms, ambiente, endpoint, header_modificado, body = {}){
+    static request_header_modificado(verbo = "GET", ms, ambiente, endpoint, header_modificado, body = {}){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -292,7 +292,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, header_modificado)
     }
 
-    static obter_resposta_por_id_e_por_body_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, id, body, header_modificado){
+    static request_por_id_e_por_body_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, id, body, header_modificado){
         let base = this.get_valor_base_ms(ambiente, ms) 
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -300,7 +300,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, header_modificado)
     }
 
-    static obter_resposta_por_body_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, body, header_modificado){
+    static request_por_body_e_header_modificado(verbo = "GET", ms, ambiente, endpoint, body, header_modificado){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -308,7 +308,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, header_modificado)
     }
 
-    static obter_resposta_por_id_e_body(verbo = "GET", ms, ambiente, endpoint, id, body){
+    static request_por_id_e_body(verbo = "GET", ms, ambiente, endpoint, id, body){
         let base = this.get_valor_base_ms(ambiente, ms)
         base = this.verificar_versao_endpoint(base, endpoint)
 
@@ -316,7 +316,7 @@ export default class Rest{
         return this.enviar_requisicao(verbo, caminho, body, this.header())
     }
 
-    static obter_resposta_por_api_key(verbo = "GET", ms, ambiente, endpoint, body = {}){
+    static request_por_api_key(verbo = "GET", ms, ambiente, endpoint, body = {}){
         const minhaVariavel = Cypress.env("keys");
         const valorPropriedade = minhaVariavel[ms];
 
