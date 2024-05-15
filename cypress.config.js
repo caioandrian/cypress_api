@@ -42,7 +42,6 @@ module.exports = defineConfig({
       require('@cypress/grep/src/plugin')(config);
       return require('./cypress/plugins/index.js')(on, config)
     },
-    excludeSpecPattern: '*.feature',
-    specPattern: 'cypress/e2e/**/*cy.js',
+    specPattern: 'cypress/e2e/**/*spec.cy.js'
   },
 })

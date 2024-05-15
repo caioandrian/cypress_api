@@ -8,28 +8,18 @@
     "cy:open-pre": "cypress open --env fileConfig=pre",
     "cy:run": "cypress run --browser chrome",
     "cy:run-exemplo": "cypress run --spec 'cypress/e2e/spec/exemplo/' --browser chrome",
-    "cy:run-exemplo-regressao":"cypress run --spec 'cypress/e2e/spec/exemplo/' --browser chrome --env grep=regressão",
+    "cy:run-exemplo-regressao": "cypress run --spec 'cypress/e2e/spec/exemplo/' --browser chrome --env grep=regressão",
     "cypress:verify": "cypress verify",
     "update-packages": "npx npm-check-updates"
   },
   "keywords": [],
-  "cypress-cucumber-preprocessor": {
-    "nonGlobalStepDefinitions": false,
-    "step_definitions": "./cypress/e2e/step_definitions",
-    "cucumberJson": {
-      "generate": true,
-      "outputFolder": "cypress/reports/json"
-    }
-  },
   "author": "Caio Andrian",
   "license": "ISC",
   "devDependencies": {
     "ajv": "^8.12.0",
     "cypress": "^13.1.0",
-    "cypress-cucumber-preprocessor": "^4.3.1",
     "faker-br": "^0.4.1",
     "fs-extra": "^11.1.1",
-    "multiple-cucumber-html-reporter": "^3.4.0",
     "rimraf": "^5.0.1"
   },
   "dependencies": {

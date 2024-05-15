@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-const cucumber = require('cypress-cucumber-preprocessor').default
 const { beforeRunHook, afterRunHook } = require('cypress-mochawesome-reporter/lib');  
 const exec = require('child_process').execSync;  
 
@@ -17,7 +16,6 @@ function getConfigurationByFile(file) {
 }
 
 module.exports = (on, config) => {
-  on('file:preprocessor', cucumber())
   on('before:browser:launch', (browser = {}, launchOptions) => {
     if (browser.family === 'chromium' && browser.name !== 'electron') {
       //launchOptions.args.push("--incognito");
@@ -42,7 +40,6 @@ module.exports = (on, config) => {
       await fs.writeFile("cypress/run/results.json", JSON.stringify(results));
     }
 
-    await exec("node ./cypress/support/reporter.js")
     await exec("npx jrm ./cypress/reports/junitreport.xml ./cypress/reports/junit/*.xml");
     await afterRunHook();
   });  
