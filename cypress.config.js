@@ -8,7 +8,6 @@ module.exports = defineConfig({
   global_timeout: 30000,
   numTestsKeptInMemory: 500,
   screenshotsFolder: 'cypress/reports/screenshots',
-  'cucumberautocomplete.strictGherkinCompletion': true,
   video: false,
   modifyObstructiveCode: false,
   experimentalSourceRewriting: true,
@@ -39,13 +38,11 @@ module.exports = defineConfig({
       grepFilterSpecs: true,
       snapshotOnly: true
     },
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
     setupNodeEvents(on, config) {
       require('@cypress/grep/src/plugin')(config);
       return require('./cypress/plugins/index.js')(on, config)
     },
-    excludeSpecPattern: '*.js',
-    specPattern: 'cypress/e2e/**/*.{feature,features}',
+    excludeSpecPattern: '*.feature',
+    specPattern: 'cypress/e2e/**/*cy.js',
   },
 })
