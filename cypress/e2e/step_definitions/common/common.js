@@ -1,287 +1,189 @@
-import {Given, When, Then, Before} from 'cypress-cucumber-preprocessor/steps'
+import {Given, When, Then, Before} from 'cypress-cucumber-preprocessor/steps';
 
-import Rest from '../../../services/common/_rest_service'
+import Rest from '../../../services/common/_rest_service';
 
-Given(`que tenha feito uma requisição do tipo {string} no ms de {string} no endpoint {string} no {string}`, (verbo, ms, endpoint, ambiente) => {
-    Rest.obter_resposta(verbo, ms, ambiente, endpoint).as('response_pre')
+Before(() => {
+  cy.wrap({}).as('query')
+  cy.wrap({}).as('body')
+  cy.wrap({}).as('header')
+  cy.wrap(null).as('id_recuperado')
+});
+
+Given(`que esteja com um token válido no {string} com o ms {string} e endpoint {string}`, (sistema, ms, endpoint)=>{
+    var user = Cypress.env("users")[sistema];
+    Rest.get_token(user.email, user.password, sistema, ms, endpoint)
 })
 
-Given(`que tenha feito uma requisição do tipo {string} no ms de {string} no endpoint {string} com o id {int} no {string}`, (verbo, ms, endpoint, id, ambiente) => {
-    Rest.obter_resposta_por_id(verbo, ms, ambiente, endpoint, id).as('response_pre')
-})
+Given(`que tenha o id com valor {string} para usar no endpoint no ead`, (valor) => {
+  cy.wrap(valor).as('id_recuperado')
+});
 
-Given(`que tenha adicionado a propriedade {string} e o valor {int} no header no {string}`, (propriedade_adicional, valor, ambiente) => {
-    Rest.get_header_modificado(propriedade_adicional, valor).as('header_modificado')
-})
+Given(`que tenha um path adicional {string} usando um id`, (path) => {
+  cy.get('@id_recuperado').then((id) => {
+    const path_extra = `/${path}/${id}`
+    cy.wrap(path_extra).as('path_adicional')
+  })
+});
 
-Given(`que tenha adicionado a propriedade {string} e o valor {string} em uma query no {string}`, (propriedade, valor, ambiente) => {
-    Rest.get_query(propriedade, valor).as('get_query')
-})
+Given(`que tenha adicionado a propriedade {string} e o valor {int} no header`, (propriedade_adicional, valor) => {
+  cy.get('@header').then((header) => {
+    Rest.get_header(propriedade_adicional, valor, header).as('header')
+  })
+});
 
-Given(`que tenha adicionado a propriedade {string} e o valor {int} em uma query no {string}`, (propriedade, valor, ambiente) => {
-    Rest.get_query(propriedade, valor).as('get_body')
-})
+Given(`que tenha adicionado a propriedade {string} e o valor {string} no header`, (propriedade_adicional, valor) => {
+  cy.get('@header').then((header) => {
+    Rest.get_header(propriedade_adicional, valor, header).as('header')
+  })
+});
 
-Given(`que tenha feito uma requisição do tipo {string} no ms de {string} no endpoint {string} usando um body no {string}`, (verbo, ms, endpoint, ambiente) => {
-    cy.get('@get_body').then((body ) => {
-        Rest.obter_resposta(verbo, ms, ambiente, endpoint, body).as('response_pre_condicao')
+Given(`que tenha adicionado a propriedade {string} e o valor {string} em uma query`, (propriedade, valor) => {
+  cy.get('@query').then((query) => {
+    Rest.get_json(propriedade, valor, query).as('query')
+  })
+});
+
+Given(`que tenha adicionado a propriedade {string} e o valor {int} em uma query`, (propriedade, valor) => {
+  cy.get('@query').then((query) => {
+    Rest.get_json(propriedade, valor, query).as('query')
+  })
+});
+
+Given(`que tenha adicionado a propriedade {string} e o valor {int} em um body`, (propriedade, valor) => {
+    cy.get('@body').then((body) => {
+        Rest.get_json(propriedade, valor, body).as('body');
     })
-})
+});
 
-Given(`que tenha adicionado a propriedade {string} com valor {int} em um body no {string}`, (campo, valor, ambiente) => {
-    Rest.get_query(campo, valor).as('get_body')
-})
-
-Given(`que tenha adicionado a propriedade {string} com valor {string} em um body no {string}`, (campo, valor, ambiente) => {
-    Rest.get_query(campo, valor).as('get_body')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} no {string}`, (verbo, ms, endpoint, ambiente) => {
-    Rest.obter_resposta(verbo, ms, ambiente, endpoint).as('response')
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando um id criado recentemente no {string}`, (verbo, ms, endpoint, ambiente) => {
-    cy.get('@response_pre_condicao').then((res_pre) => {
-        Rest.obter_resposta_por_id(verbo, ms, ambiente, endpoint, res_pre.body.id).as('response')
+Given(`que tenha adicionado a propriedade {string} e o valor {string} em um body`, (propriedade, valor) => {
+    cy.get('@body').then((body) => {
+        Rest.get_json(propriedade, valor, body).as('body');
     })
+});
 
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
+Given(`que tenha feito uma requisição do tipo {string} no ms de {string} no endpoint {string} no {string}`, (verbo, ms, endpoint, sistema) => {
+  cy.get('@body').then((body) => {
+    cy.get('@query').then((query) => {
+      cy.get('@header').then((header) => {
+        cy.get('@id_recuperado').then((id) => {
+          Rest.obter_resposta(verbo, ms, sistema, endpoint, id, body, header, query).then((res) => {
+            cy.wrap(res).as('response_pre_requisito')
 
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando um id criado recentemente e um body no {string}`, (verbo, ms, endpoint, ambiente) => {
-    cy.get('@get_body').then((body) => {
-        cy.get('@response_pre_condicao').then((res_pre) => {
-            Rest.obter_resposta_por_id(verbo, ms, ambiente, endpoint, res_pre.body.id, body).as('response')
+            cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "sistema": sistema}).as('dados_endpoint');
+          })
         })
+      })
     })
+  })
+});
 
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando um id criado recentemente e um body e um header modificado no {string}`, (verbo, ms, endpoint, ambiente) => {
-    cy.get('@header_modificado').then((header) => {
-        cy.get('@get_body').then((body) => {
-            cy.get('@response_pre_condicao').then((res_pre) => {
-                Rest.obter_resposta_por_id_e_body_e_header_modificado(verbo, ms, ambiente, endpoint, res_pre.body.id, header, body).as('response') 
-            })
+When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} no {string}`, (verbo, ms, endpoint, sistema) => {
+  cy.get('@body').then((body) => {
+    cy.get('@query').then((query) => {
+      cy.get('@header').then((header) => {
+        cy.get('@id_recuperado').then((id_recuperado) => {
+          cy.log(id_recuperado)
+          Rest.obter_resposta(verbo, ms, sistema, endpoint, id_recuperado, body, header, query).as('response');
+          
+          cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "sistema": sistema}).as('dados_endpoint');
         })
+      })
     })
+  })
+});
 
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} com o id {int} no {string}`, (verbo, ms, endpoint, id, ambiente) => {
-    Rest.obter_resposta_por_id(verbo, ms, ambiente, endpoint, id).as('response')
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} com o id {string} no {string}`, (verbo, ms, endpoint, id, ambiente) => {
-    Rest.obter_resposta_por_id(verbo, ms, ambiente, endpoint, id).as('response')
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} com o id {int} e {string} com o id {int} no {string}`, (verbo, ms, endpoint, id, endpoint2, id2, ambiente) => {
-    Rest.obter_resposta_por_2_ids(verbo, ms, ambiente, endpoint, id, endpoint2, id2).as('response')
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando uma query no {string}`, (verbo, ms, endpoint, ambiente) => {
-    cy.get('@get_query').then((query ) => {
-        Rest.obter_resposta_por_query(verbo, ms, ambiente, endpoint, query).as('response')
-    })
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando uma query e id do período {string} no {string}`, (verbo, ms, endpoint, id, ambiente) => {
-    cy.get('@get_query').then((query ) => {
-        Rest.obter_resposta_por_id_e_query(verbo, ms, ambiente, endpoint, id, query).as('response')
-    })
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} com o id {int} e o header modificado no {string}`, (verbo, ms, endpoint, id, ambiente) => {
-    cy.get('@header_modificado').then((header) => {
-        Rest.obter_resposta_por_id_e_header_modificado(verbo, ms, ambiente, endpoint, id, header).as('response')
-    })
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} com o header modificado no {string}`, (verbo, ms, endpoint, ambiente) => {
-    cy.get('@header_modificado').then((header) => {
-        Rest.obter_resposta_header_modificado(verbo, ms, ambiente, endpoint, header).as('response')
-    })
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} com o id {int} usando uma query e header modificado no {string}`, (verbo, ms, endpoint, id, ambiente) => {
-    cy.get('@get_query').then((query ) => {
-        cy.get('@header_modificado').then((header) => {
-            Rest.obter_resposta_por_id_e_por_query_e_header_modificado(verbo, ms, ambiente, endpoint, id, query, header).as('response')
+When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} com path adicional no {string}`, (verbo, ms, endpoint, sistema) => {
+  cy.get('@path_adicional').then((path_adicional) => {
+    cy.get('@body').then((body) => {
+      cy.get('@query').then((query) => {
+        cy.get('@header').then((header) => {
+          cy.get('@id_recuperado').then((id_recuperado) => {
+            Rest.obter_resposta(verbo, ms, sistema, endpoint, id_recuperado, body, header, query, path_adicional).as('response');
+            
+            cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "sistema": sistema, "ie": ie}).as('dados_endpoint');
+          })
         })
+      })
     })
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando uma query e header modificado no {string}`, (verbo, ms, endpoint, ambiente) => {
-    cy.get('@get_query').then((query ) => {
-        cy.get('@header_modificado').then((header) => {
-            Rest.obter_resposta_por_query_e_header_modificado(verbo, ms, ambiente, endpoint, query, header).as('response')
-        })
-    })
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando um body e header modificado no {string}`, (verbo, ms, endpoint, ambiente) => {
-    cy.get('@get_body').then((body ) => {
-        cy.get('@header_modificado').then((header) => {
-            Rest.obter_resposta_por_body_e_header_modificado(verbo, ms, ambiente, endpoint, body, header).as('response')
-        })
-    })
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando um body no {string}`, (verbo, ms, endpoint, ambiente) => {
-    cy.get('@get_body').then((body ) => {
-        Rest.obter_resposta(verbo, ms, ambiente, endpoint, body).as('response')
-    })
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando um body e id do período {string} no {string}`, (verbo, ms, endpoint, id, ambiente) => {
-    cy.get('@get_body').then((body ) => {
-        Rest.obter_resposta_por_id_e_body(verbo, ms, ambiente, endpoint, id, body).as('response')
-    })
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
-When(`fizer uma requisição do tipo {string} no ms de {string} no endpoint {string} usando uma api key no {string}`, (verbo, ms, endpoint, ambiente) => {
-    Rest.obter_resposta_por_api_key(verbo, ms, ambiente, endpoint).as('response')
-
-    cy.wrap({"verbo": verbo, "ms": ms, "endpoint": endpoint, "ambiente": ambiente}).as('dados_endpoint')
-})
-
+  })
+});
 
 Then(`deve retornar na resposta o status code {int}`, (status_code_esperado) => {
-	cy.get('@response').then(res => {
-        Rest.validacao_status_code(res, status_code_esperado)
-    })
+  cy.get('@response').then((res) => {
+    Rest.validacao_status_code(res, status_code_esperado);
+  });
 });
 
 Then(`deve retornar no corpo da resposta uma mensagem de erro`, () => {
-	cy.get('@response').then(res => {
-        Rest.validacao_mensagem_erro_existe(res)
-    })
+  cy.get('@response').then((res) => {
+    Rest.validacao_mensagem_erro_existe(res);
+  });
 });
 
 Then(`deve retornar no corpo da resposta uma mensagem de erro com o texto {string}`, (mensagem_esperada) => {
-	cy.get('@response').then(res => {
-        Rest.validacao_texto_mensagem_erro(res, mensagem_esperada)
-    })
+  cy.get('@response').then((res) => {
+    Rest.validacao_texto_mensagem_erro(res, mensagem_esperada);
+  });
 });
 
 Then(`deve obter como resposta o schema {string} com status {int}`, (schema, status) => {
-	cy.get('@response').then(res => {
-        cy.validacao_de_contrato(res, schema, status).then(valid => {
-            expect(valid).to.be.true;
-        })
-    })
+  cy.get('@response').then((res) => {
+    cy.validacao_de_contrato(res, schema, status).then((valid) => {
+      expect(valid).to.be.true;
+    });
+  });
 });
 
 Then(`deve obter um tempo de resposta menor que {int} segundos`, (tempo_limite) => {
-	cy.get('@response').then(res => {
-        Rest.valida_tempo_resposta(res, tempo_limite)
-    })
+  cy.get('@response').then((res) => {
+    Rest.valida_tempo_resposta(res, tempo_limite);
+  });
 });
 
 Then(`deve retornar no corpo da resposta o total de {int} registros`, (quantidade = 1) => {
-	cy.get('@response').then(res => {
-        Rest.valida_quantidade_registros_no_corpo_da_resposta(res, quantidade)
-    })
+  cy.get('@response').then((res) => {
+    Rest.valida_quantidade_registros_no_corpo_da_resposta(res, quantidade);
+  });
 });
 
-Then(`deve retornar no corpo da resposta um objeto não vazio`, (quantidade = 1) => {
-	cy.get('@response').then(res => {
-        Rest.valida_corpo_da_resposta_nao_vazio(res, quantidade)
-    })
+Then(`não deve retornar no corpo da resposta um objeto vazio`, (quantidade = 1) => {
+  cy.get('@response').then((res) => {
+    Rest.valida_corpo_da_resposta_nao_vazio(res, quantidade);
+  });
 });
 
 Then(`deve retornar no corpo da resposta um objeto vazio`, () => {
-	cy.get('@response').then(res => {
-        Rest.valida_corpo_da_resposta_vazio(res)
-    })
+  cy.get('@response').then((res) => {
+    Rest.valida_corpo_da_resposta_vazio(res);
+  });
 });
 
 Then(`não deve retornar no corpo da resposta nenhum registro`, () => {
-	cy.get('@response').then(res => {
-        Rest.valida_corpo_da_resposta_vazio(res)
-    })
+  cy.get('@response').then((res) => {
+    Rest.valida_corpo_da_resposta_vazio(res);
+  });
 });
 
-Then(`deve retornar no corpo da resposta o total de {int} registros dentro de {string}`, (quantidade = 1, propriedade) => {
-	cy.get('@response').then(res => {
-        Rest.valida_quantidade_registros_no_corpo_da_resposta(res, quantidade, propriedade)
-    })
+Then(`deverá excluir com sucesso o novo cadastro`, () => {
+  cy.get('@response').then((res) => {
+    cy.get('@dados_endpoint').then((caminho) => {
+      Rest.obter_resposta("DELETE", caminho.ms, caminho.sistema, caminho.endpoint, res.body.id).as('response_delete_after');
+    });
+  });
+
+  cy.get('@response_delete_after').then((res_delete) => {
+    Rest.validacao_status_code(res_delete);
+  });
 });
 
-Then(`deve retornar no corpo da resposta um array`, () => {
-	cy.get('@response').then(res => {
-        Rest.valida_corpo_da_resposta_array(res)
-    })
-});
+Then(`deverá excluir com sucesso o novo cadastro através da propriedade {string}`, (propriedade = "id") => {
+  cy.get('@response').then((res) => {
+    cy.get('@dados_endpoint').then((caminho) => {
+      Rest.obter_resposta("DELETE", caminho.ms, caminho.sistema, caminho.endpoint, res.body[propriedade]).as('response_delete_after');
+    });
+  });
 
-Then(`deve retornar no corpo da resposta um array não vazio`, () => {
-	cy.get('@response').then(res => {
-        Rest.valida_corpo_da_resposta_array(res)
-        Rest.valida_corpo_da_resposta_nao_vazio(res)
-    })
-});
-
-Then(`deve retornar no corpo da resposta a propriedade {string} com valor booleano`, (propriedade) => {
-	cy.get('@response').then(res => {
-        Rest.valida_propriedade_booleano_no_corpo_da_resposta(res, propriedade)
-    })
-});
-
-Then(`deve retornar no corpo da resposta a propriedade {string} com valor booleano igual a {string}`, (propriedade, valor) => {
-	cy.get('@response').then(res => {
-        Rest.valida_propriedade_booleano_no_corpo_da_resposta(res, propriedade, valor)
-    })
-});
-
-Then(`deve retornar no corpo da resposta a propriedade {string} com ao menos registro`, (propriedade) => {
-	cy.get('@response').then(res => {
-        Rest.valida_propriedade_nao_vazia_no_corpo_da_resposta(res, propriedade)
-    })
-});
-
-Then(`deverá excluir com sucesso o registro que foi recém criado`, () => {
-    cy.get('@response').then((res) => {
-        cy.get('@dados_endpoint').then((caminho) => {
-            Rest.obter_resposta_por_id("DELETE", caminho.ms, caminho.ambiente, caminho.endpoint, res.body.id).as('response_delete_after')
-        })
-    })
-
-    cy.get('@response_delete_after').then((res_delete) => {
-        Rest.validacao_status_code(res_delete)
-    })
-})
-
-Then(`deve retornar no corpo da resposta a propriedade {string} com valor igual a {string}`, (propriedade, valor) => {
-	cy.get('@response').then(res => {
-        Rest.valida_valor_propriedade_no_corpo_da_resposta(res, propriedade, valor)
-    })
+  cy.get('@response_delete_after').then((res_delete) => {
+    Rest.validacao_status_code(res_delete);
+  });
 });
